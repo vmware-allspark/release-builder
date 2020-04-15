@@ -1,0 +1,21 @@
+version: 2
+jobs:
+  build:
+    machine:
+      docker_layer_caching: true
+    steps:
+    - checkout
+    - run: >-
+        docker run \
+          --privileged \
+          -v /var/run/docker.sock:/var/run/docker.sock \
+          -v $(pwd):/go/src/istio.io/release-builder/ \
+          -w /go/src/istio.io/release-builder/ \
+          -e DOCKER_HUB="$DOCKER_HUB" \
+          -e DOCKER_USER="$DOCKER_USER" \
+          -e DOCKER_PASS="$DOCKER_PASS" \
+          gcr.io/istio-testing/build-tools:master-2020-03-18T15-19-34 \
+          bash -c 'docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}; ./release/build.sh'
+
+workflows:
+  version: 2
