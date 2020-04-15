@@ -19,16 +19,16 @@ WD=$(cd "$WD"; pwd)
 
 set -eux
 
-gcloud auth activate-service-account --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
+# gcloud auth activate-service-account --key-file="${GOOGLE_APPLICATION_CREDENTIALS}"
 
 # Temporary hack to get around some gcloud credential issues
-mkdir ~/.docker
-cp "${DOCKER_CONFIG}/config.json" ~/.docker/
-export DOCKER_CONFIG=~/.docker
-gcloud auth configure-docker -q
+# mkdir ~/.docker
+# cp "${DOCKER_CONFIG}/config.json" ~/.docker/
+# export DOCKER_CONFIG=~/.docker
+# gcloud auth configure-docker -q
 
-PRERELEASE_DOCKER_HUB=${PRERELEASE_DOCKER_HUB:-gcr.io/istio-prerelease-testing}
-GCS_BUCKET=${GCS_BUCKET:-istio-prerelease/prerelease}
+# PRERELEASE_DOCKER_HUB=${PRERELEASE_DOCKER_HUB:-gcr.io/istio-prerelease-testing}
+# GCS_BUCKET=${GCS_BUCKET:-istio-prerelease/prerelease}
 
 if [[ -n ${ISTIO_ENVOY_BASE_URL:-} ]]; then
   PROXY_OVERRIDE="proxyOverride: ${ISTIO_ENVOY_BASE_URL}"
@@ -49,38 +49,38 @@ directory: ${WORK_DIR}
 dependencies:
 ${DEPENDENCIES:-$(cat <<EOD
   istio:
-    git: https://github.com/istio/istio
-    branch: release-1.4
+    git: https://github.com/vmware-allspark/istio
+    branch: build-1.4.7
   cni:
-    git: https://github.com/istio/cni
+    git: https://github.com/vmware-allspark/cni
     auto: deps
   operator:
-    git: https://github.com/istio/operator
+    git: https://github.com/vmware-allspark/operator
     auto: modules
   api:
-    git: https://github.com/istio/api
+    git: https://github.com/vmware-allspark/api
     auto: modules
   proxy:
-    git: https://github.com/istio/proxy
+    git: https://github.com/vmware-allspark/proxy
     auto: deps
   pkg:
-    git: https://github.com/istio/pkg
+    git: https://github.com/vmware-allspark/pkg
     auto: modules
   client-go:
-    git: https://github.com/istio/client-go
-    branch: release-1.4
+    git: https://github.com/vmware-allspark/client-go
+    branch: build-1.4.7
   gogo-genproto:
-    git: https://github.com/istio/gogo-genproto
-    branch: release-1.4
+    git: https://github.com/vmware-allspark/gogo-genproto
+    branch: build-1.4.7
   test-infra:
-    git: https://github.com/istio/test-infra
-    branch: master
+    git: https://github.com/vmware-allspark/test-infra
+    branch: build-1.4.7
   tools:
-    git: https://github.com/istio/tools
-    branch: release-1.4
+    git: https://github.com/vmware-allspark/tools
+    branch: build-1.4.7
   installer:
-    git: https://github.com/istio/installer
-    branch: release-1.4
+    git: https://github.com/vmware-allspark/installer
+    branch: build-1.4.7
 EOD
 )}
 ${PROXY_OVERRIDE:-}
@@ -92,4 +92,4 @@ export PATH=${GOPATH}/bin:${PATH}
 
 go run main.go build --manifest <(echo "${MANIFEST}")
 go run main.go validate --release "${WORK_DIR}/out"
-go run main.go publish --release "${WORK_DIR}/out" --gcsbucket "${GCS_BUCKET}" --dockerhub "${PRERELEASE_DOCKER_HUB}" --dockertags "${VERSION}"
+go run main.go publish --release "${WORK_DIR}/out" --dockerhub "${DOCKER_HUB}" --dockertags "${VERSION}"
