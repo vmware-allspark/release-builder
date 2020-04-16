@@ -50,7 +50,7 @@ dependencies:
 ${DEPENDENCIES:-$(cat <<EOD
   istio:
     git: https://github.com/vmware-allspark/istio
-    branch: build-1.4.7
+    branch: build-1.4.6
   cni:
     git: https://github.com/vmware-allspark/cni
     auto: deps
@@ -68,19 +68,19 @@ ${DEPENDENCIES:-$(cat <<EOD
     auto: modules
   client-go:
     git: https://github.com/vmware-allspark/client-go
-    branch: build-1.4.7
+    branch: build-1.4.6
   gogo-genproto:
     git: https://github.com/vmware-allspark/gogo-genproto
-    branch: build-1.4.7
+    branch: build-1.4.6
   test-infra:
     git: https://github.com/vmware-allspark/test-infra
-    branch: build-1.4.7
+    branch: build-1.4.6
   tools:
     git: https://github.com/vmware-allspark/tools
-    branch: build-1.4.7
+    branch: build-1.4.6
   installer:
     git: https://github.com/vmware-allspark/installer
-    branch: build-1.4.7
+    branch: build-1.4.6
 EOD
 )}
 ${PROXY_OVERRIDE:-}
