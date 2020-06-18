@@ -15,7 +15,7 @@ jobs:
           -e DOCKER_USER="$DOCKER_USER" \
           -e DOCKER_PASS="$DOCKER_PASS" \
           __TEST_INFRA_IMAGE__ \
-          bash -c 'docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}; ./release/build.sh'
+          bash -c 'docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}; ./release/build_images.sh'
 
 workflows:
   version: 2
