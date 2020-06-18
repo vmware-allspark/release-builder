@@ -83,10 +83,11 @@ cp .allspark/$CONFIG_FILE .circleci/
 cp .allspark/$MANIFEST_FILE release/
 cp .allspark/$BUILD_SCRIPT release/
 cp .allspark/setup.sh release/setup.sh.bak
-echo $VERSION > release/trigger-build
 
-git checkout -b $BUILD_BRANCH $REMOTE_NAME/$BASE_BRANCH -f || git checkout $BUILD_BRANCH -f
+git branch -D $BUILD_BRANCH || true
+git checkout -b $BUILD_BRANCH $REMOTE_NAME/$BASE_BRANCH -f
 rm -rf .allspark
+echo $VERSION > release/trigger-build
 
 # Finish
 
