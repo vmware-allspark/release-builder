@@ -36,15 +36,17 @@ for ENTRY in "${REPOS[@]}" ; do
   TYPE="${META%%#*}"
   REF="${META##*#}"
 
+  git clone git@github.com:vmware-allspark/$REPO.git
+  git remote add upstream https://github.com/istio/$REPO
+  git remote update
+  pushd $REPO
   if [[ $TYPE == branch ]]; then
-    git clone git@github.com:vmware-allspark/$REPO.git
-    pushd $REPO
-    git remote add upstream https://github.com/istio/$REPO
-    git remote update
     git checkout -b $BUILD_BRANCH $REF
-    git push origin $BUILD_BRANCH -f
-    popd
+  else
+    git checkout -b $BUILD_BRANCH $BASE_BRANCH
   fi
+  git push origin $BUILD_BRANCH -f
+  popd
 
   echo "  $REPO:" >> $MANIFEST_FILE
   echo "    git: https://github.com/vmware-allspark/$REPO" >> $MANIFEST_FILE
