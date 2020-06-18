@@ -37,13 +37,13 @@ for ENTRY in "${REPOS[@]}" ; do
   REF="${META##*#}"
 
   git clone git@github.com:vmware-allspark/$REPO.git
+  pushd $REPO
   git remote add upstream https://github.com/istio/$REPO
   git remote update
-  pushd $REPO
   if [[ $TYPE == branch ]]; then
     git checkout -b $BUILD_BRANCH $REF
   else
-    git checkout -b $BUILD_BRANCH $BASE_BRANCH
+    git checkout -b $BUILD_BRANCH upstream/$BASE_BRANCH
   fi
   git push origin $BUILD_BRANCH -f
   popd
