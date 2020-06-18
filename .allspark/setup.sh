@@ -1,16 +1,17 @@
 #!/bin/bash
-set +x
+set -eux
 
 # Configuration
 
+BASE_BRANCH=release-1.4
 VERSION=1.4.8
 
 # Set up repos as per https://github.com/istio/release-builder/blob/release-1.4/release/build.sh
 # and the hashes corresponding to tags in github.com/istio/<repo> for all repos.
 REPOS=(
- 'istio|branch#674e254c1685b25382282da03ec17f1cf3e0ea80'
- 'cni|auto#deps'
- 'api|auto#modules'
+  'istio|branch#674e254c1685b25382282da03ec17f1cf3e0ea80'
+  'cni|auto#deps'
+  'api|auto#modules'
 )
 
 # CI Script
@@ -70,14 +71,22 @@ rm -rf $BUILD_DIR
 # Switch to build branch and copy build files
 
 BUILD_SCRIPT="build_images.sh"
+REMOTE_NAME="istio"
 
-git checkout -b $BUILD_BRANCH || git checkout $BUILD_BRANCH
-mkdir ../.circleci
-cp $CONFIG_FILE ../.circleci/
-cp $MANIFEST_FILE ../release/
-cp $BUILD_SCRIPT ../release/
-echo $VERSION > ../release/trigger-build
+git remote rm $REMOTE_NAME || true
+git remote add $REMOTE_NAME https://github.com/istio/release-builder.git
+git remote update
+
 cd ..
+mkdir .circleci
+cp .allspark/$CONFIG_FILE .circleci/
+cp .allspark/$MANIFEST_FILE release/
+cp .allspark/$BUILD_SCRIPT release/
+cp .allspark/setup.sh release/setup.sh.bak
+echo $VERSION > release/trigger-build
+
+git checkout -b $BUILD_BRANCH $REMOTE_NAME/$BASE_BRANCH -f || git checkout $BUILD_BRANCH -f
+rm -rf .allspark
 
 # Finish
 
