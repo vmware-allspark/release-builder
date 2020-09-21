@@ -79,7 +79,7 @@ func CheckRelease(release string) ([]string, []error) {
 		"Operator":             TestOperator,
 		"Manifest":             TestManifest,
 		"Licenses":             TestLicenses,
-		"Grafana":              TestGrafana,
+//		"Grafana":              TestGrafana,
 		"CompletionFiles":      TestCompletionFiles,
 		"ProxyVersion":         TestProxyVersion,
 	}
