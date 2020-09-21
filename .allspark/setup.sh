@@ -55,6 +55,9 @@ for ENTRY in "${REPOS[@]}" ; do
   else
     echo "    $TYPE: $REF" >> $MANIFEST_FILE
   fi
+  if [[ $REPO == client-go ]]; then
+    echo "    goversionenabled: true" >> $MANIFEST_FILE
+  fi
 done
 
 echo "EOD" >> $MANIFEST_FILE
