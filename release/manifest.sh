@@ -7,7 +7,7 @@ DEPENDENCIES=$(cat <<EOD
     auto: modules
   proxy:
     git: https://github.com/vmware-allspark/proxy
-    auto: deps
+    branch: build-1.7.3-custom
   pkg:
     git: https://github.com/vmware-allspark/pkg
     auto: modules
