@@ -1,7 +1,7 @@
 DEPENDENCIES=$(cat <<EOD
   istio:
     git: https://github.com/vmware-allspark/istio
-    branch: build-1.7.3
+    branch: build-1.7.7
   api:
     git: https://github.com/vmware-allspark/api
     auto: modules
@@ -13,17 +13,17 @@ DEPENDENCIES=$(cat <<EOD
     auto: modules
   client-go:
     git: https://github.com/vmware-allspark/client-go
-    branch: build-1.7.3
+    branch: build-1.7.7
     goversionenabled: true
   gogo-genproto:
     git: https://github.com/vmware-allspark/gogo-genproto
-    branch: build-1.7.3
+    branch: build-1.7.7
   test-infra:
     git: https://github.com/vmware-allspark/test-infra
-    branch: build-1.7.3
+    branch: build-1.7.7
   tools:
     git: https://github.com/vmware-allspark/tools
-    branch: build-1.7.3
+    branch: build-1.7.7
   envoy:
     git: https://github.com/vmware-allspark/envoy
     auto: proxy_workspace
