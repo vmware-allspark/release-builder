@@ -27,5 +27,6 @@ DEPENDENCIES=$(cat <<EOD
   envoy:
     git: https://github.com/vmware-allspark/envoy
     auto: proxy_workspace
+    ignorevulnerability: true
 EOD
 )
