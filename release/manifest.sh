@@ -1,13 +1,14 @@
+ISTIO_ENVOY_BASE_URL=https://github.com/vmware-allspark/proxy/releases/download/1.7.8-custom
 DEPENDENCIES=$(cat <<EOD
   istio:
     git: https://github.com/vmware-allspark/istio
-    branch: build-1.7.8
+    branch: build-1.7.8-custom
   api:
     git: https://github.com/vmware-allspark/api
     auto: modules
   proxy:
     git: https://github.com/vmware-allspark/proxy
-    auto: deps
+    branch: build-1.7.8-custom
   pkg:
     git: https://github.com/vmware-allspark/pkg
     auto: modules
