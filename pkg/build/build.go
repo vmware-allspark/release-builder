@@ -31,7 +31,7 @@ import (
 // Build will create all artifacts required by the manifest
 // This assumes the working directory has been setup and sources resolved.
 func Build(manifest model.Manifest, githubToken string) error {
-	if _, f := manifest.BuildOutputs[model.Scanner]; f {
+	/*if _, f := manifest.BuildOutputs[model.Scanner]; f {
 		if err := Scanner(manifest, githubToken); err != nil {
 			if manifest.IgnoreVulnerability {
 				log.Infof("Ignoring vulnerability scanning error: %v", err)
@@ -39,7 +39,7 @@ func Build(manifest model.Manifest, githubToken string) error {
 				return fmt.Errorf("failed image scan: %v", err)
 			}
 		}
-	}
+	}*/
 
 	if _, f := manifest.BuildOutputs[model.Docker]; f {
 		if err := Docker(manifest); err != nil {
@@ -69,11 +69,11 @@ func Build(manifest model.Manifest, githubToken string) error {
 		}
 	}
 
-	if _, f := manifest.BuildOutputs[model.Grafana]; f {
+	/*if _, f := manifest.BuildOutputs[model.Grafana]; f {
 		if err := Grafana(manifest); err != nil {
 			return fmt.Errorf("failed to build Grafana: %v", err)
 		}
-	}
+	}*/
 
 	// Bundle all sources used in the build
 	cmd := util.VerboseCommand("tar", "-czf", "out/sources.tar.gz", "sources")
