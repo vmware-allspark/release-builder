@@ -21,7 +21,7 @@ import (
 
 	"istio.io/pkg/log"
 	"istio.io/release-builder/pkg"
-	"istio.io/release-builder/pkg/model"
+	//"istio.io/release-builder/pkg/model"
 	"istio.io/release-builder/pkg/util"
 )
 
@@ -72,7 +72,7 @@ var (
 				return err
 			}
 
-			if _, f := manifest.BuildOutputs[model.Scanner]; f {
+			/*if _, f := manifest.BuildOutputs[model.Scanner]; f {
 				if err := Scanner(manifest, token, savedIstioGit, savedIstioBranch); err != nil {
 					if manifest.IgnoreVulnerability {
 						log.Infof("Ignoring vulnerability scanning error: %v", err)
@@ -80,7 +80,7 @@ var (
 						return fmt.Errorf("failed image scan: %v", err)
 					}
 				}
-			}
+			}*/
 
 			if err := Build(manifest, token); err != nil {
 				return fmt.Errorf("failed to build: %v", err)
