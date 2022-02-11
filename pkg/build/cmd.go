@@ -72,12 +72,12 @@ var (
 				return err
 			}
 
-			if flags.buildBaseImages {
+			/*if flags.buildBaseImages {
 				if err := Scanner(manifest, token, savedIstioGit, savedIstioBranch); err != nil {
 					return fmt.Errorf("failed image scan: %v", err)
 				}
 				return nil
-			}
+			}*/
 
 			if err := Build(manifest, token); err != nil {
 				return fmt.Errorf("failed to build: %v", err)
