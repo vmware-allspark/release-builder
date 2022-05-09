@@ -21,7 +21,7 @@ import (
 
 	"istio.io/pkg/log"
 	"istio.io/release-builder/pkg"
-	"istio.io/release-builder/pkg/util"
+	//"istio.io/release-builder/pkg/util"
 )
 
 var (
