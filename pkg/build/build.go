@@ -25,7 +25,7 @@ import (
 
 	"istio.io/pkg/log"
 	"istio.io/release-builder/pkg/model"
-	"istio.io/release-builder/pkg/util"
+//	"istio.io/release-builder/pkg/util"
 )
 
 // Build will create all artifacts required by the manifest
@@ -68,11 +68,11 @@ func Build(manifest model.Manifest) error {
 		}
 	}
 
-	if _, f := manifest.BuildOutputs[model.Grafana]; f {
+/*	if _, f := manifest.BuildOutputs[model.Grafana]; f {
 		if err := Grafana(manifest); err != nil {
 			return fmt.Errorf("failed to build Grafana: %v", err)
 		}
-	}
+	}*/
 
 	// Bundle all sources used in the build
 	cmd := util.VerboseCommand("tar", "-czf", "out/sources.tar.gz", "sources")
