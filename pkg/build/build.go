@@ -25,7 +25,7 @@ import (
 
 	"istio.io/pkg/log"
 	"istio.io/release-builder/pkg/model"
-//	"istio.io/release-builder/pkg/util"
+	"istio.io/release-builder/pkg/util"
 )
 
 // Build will create all artifacts required by the manifest
