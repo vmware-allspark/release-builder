@@ -1,0 +1,105 @@
+#!/bin/bash
+set -eux
+
+# Configuration
+
+BASE_BRANCH=release-1.13
+VERSION=1.13.4-release-tsm-enterprise-tarun
+
+# Set up repos as per https://github.com/istio/release-builder/blob/release-1.4/release/build.sh
+# and the hashes corresponding to tags in github.com/istio/<repo> for all repos.
+REPOS=(
+  'istio|branch#202e88863858342eeb0206944e9d277a545eb194'
+  'api|auto#modules'
+  'proxy|auto#deps'
+  'pkg|auto#modules'
+  'client-go|branch#a717f1acbd1f4d127a6ab745d4910804f1134631'
+  'gogo-genproto|branch#fb071f0717beb4365abe7534663f7f13692759f8'
+  'test-infra|branch#e131c41b5ae2771c32b55b060f0205f867552998'
+  'tools|branch#06f1538dd0907188c96cd83f6342948f88e0a930'
+  'envoy|auto#proxy_workspace'
+)
+
+# CI Script
+
+CONFIG_FILE=config.yml
+BUILD_IMAGE=$(curl https://raw.githubusercontent.com/istio/test-infra/${VERSION}/prow/config/jobs/release-builder.yaml | grep image: | awk '{ print $2 }')
+sed "s=__TEST_INFRA_IMAGE__=${BUILD_IMAGE}=" circleci_template.yml > $CONFIG_FILE
+
+# Build Script
+
+BUILD_BRANCH=build-$VERSION
+BUILD_DIR=`mktemp -d`
+MANIFEST_FILE="manifest.sh"
+
+pushd $BUILD_DIR
+
+echo "DEPENDENCIES=\$(cat <<EOD" >> $MANIFEST_FILE
+
+for ENTRY in "${REPOS[@]}" ; do
+  REPO="${ENTRY%%|*}"
+  META="${ENTRY##*|}"
+  TYPE="${META%%#*}"
+  REF="${META##*#}"
+
+  git clone git@github.com:vmware-allspark/$REPO.git
+  pushd $REPO
+  git remote add upstream https://github.com/istio/$REPO
+  git remote update
+  if [[ $TYPE == branch ]]; then
+    git checkout -b $BUILD_BRANCH $REF
+  else
+    git checkout -b $BUILD_BRANCH upstream/$BASE_BRANCH
+  fi
+  git push origin $BUILD_BRANCH -f
+  popd
+
+  echo "  $REPO:" >> $MANIFEST_FILE
+  echo "    git: https://github.com/vmware-allspark/$REPO" >> $MANIFEST_FILE
+  if [[ $TYPE == branch ]]; then
+    echo "    branch: $BUILD_BRANCH" >> $MANIFEST_FILE
+  else
+    echo "    $TYPE: $REF" >> $MANIFEST_FILE
+  fi
+  if [[ $REPO == client-go ]]; then
+    echo "    goversionenabled: true" >> $MANIFEST_FILE
+  fi
+done
+
+echo "EOD" >> $MANIFEST_FILE
+echo ")" >> $MANIFEST_FILE
+
+popd
+
+# Copy generated manifest
+
+cp $BUILD_DIR/$MANIFEST_FILE .
+
+# Clean up
+
+rm -rf $BUILD_DIR
+
+# Switch to build branch and copy build files
+
+BUILD_SCRIPT="build_images.sh"
+REMOTE_NAME="istio"
+
+git remote rm $REMOTE_NAME || true
+git remote add $REMOTE_NAME https://github.com/istio/release-builder.git
+git remote update
+
+cd ..
+mkdir .circleci
+cp .allspark/$CONFIG_FILE .circleci/
+cp .allspark/$MANIFEST_FILE release/
+cp .allspark/$BUILD_SCRIPT release/
+cp .allspark/setup.sh release/setup.sh.bak
+
+git branch -D $BUILD_BRANCH || true
+git checkout -b $BUILD_BRANCH $REMOTE_NAME/$BASE_BRANCH -f
+rm -rf .allspark
+echo $VERSION > release/trigger-build
+
+# Finish
+
+echo "Setup complete!"
