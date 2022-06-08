@@ -27,7 +27,7 @@ source ${WD}/manifest.sh
 
 set -eux
 
-ISTIO_ENVOY_BASE_URL="https://storage.googleapis.com/tsm-mesh7-build"
+ISTIO_ENVOY_BASE_URL="https://storage.googleapis.com/tsm-istio-build"
 
 if [[ -n ${ISTIO_ENVOY_BASE_URL:-} ]]; then
   PROXY_OVERRIDE="proxyOverride: ${ISTIO_ENVOY_BASE_URL}"
