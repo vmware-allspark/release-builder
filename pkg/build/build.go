@@ -28,7 +28,7 @@ import (
 	"istio.io/release-builder/pkg/util"
 )
 
-// Build will create all artifacts required by the manifest
+// Build will create all artifacts required by the manifest 
 // This assumes the working directory has been setup and sources resolved.
 func Build(manifest model.Manifest) error {
 	if _, f := manifest.BuildOutputs[model.Docker]; f {
