@@ -20,7 +20,7 @@ REPOS=(
   'envoy|auto#proxy_workspace'
 )
 
-# CI Script 
+# CI Script
 
 CONFIG_FILE=config.yml
 BUILD_IMAGE=$(curl https://raw.githubusercontent.com/istio/test-infra/1.12.7/prow/config/jobs/release-builder.yaml | grep image: | awk '{ print $2 }')
