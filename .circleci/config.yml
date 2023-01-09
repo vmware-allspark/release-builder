@@ -14,7 +14,7 @@ jobs:
           -e DOCKER_HUB="$DOCKER_HUB" \
           -e DOCKER_USER="$DOCKER_USER" \
           -e DOCKER_PASS="$DOCKER_PASS" \
-          gcr.io/istio-testing/build-tools:latest \
+          gcr.io/istio-testing/build-tools:master-5476a2a447736be89da74102c1c67ebbd6918b5a \
           bash -c 'docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}; ./release/build_images.sh'
 
 workflows:
