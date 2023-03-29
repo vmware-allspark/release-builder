@@ -9,14 +9,14 @@ VERSION=1.13.0-release-v1
 # Set up repos as per https://github.com/istio/release-builder/blob/release-1.4/release/build.sh
 # and the hashes corresponding to tags in github.com/istio/<repo> for all repos.
 REPOS=(
-  'istio|branch#56f057aaaf2aacc53dae77d68587cb222e8a8a98'
+  'istio|branch#75ee7514615d3a642a7eabaa0ad7c22cea1a1ed0'
   'api|auto#modules'
   'proxy|auto#deps'
   'pkg|auto#modules'
-  'client-go|branch#4b21f100d9147952f88b04fafbebb81091edd5a0'
-  'gogo-genproto|branch#c6177de3a4de2cca6dce15fa095b90837251d5cd'
-  'test-infra|branch#cd553c1eba04768e71aadcb994fa4380a6f629b9'
-  'tools|branch#a69071670c0bd0e7541ee67470afd828104f67b3'
+  'client-go|branch#b2393d6d11a0e320287653391774b30e27cd226a'
+  'gogo-genproto|branch#f6930f836f1d2ecea2b3b53f280b992e26c0c555'
+  'test-infra|branch#15e60f61c7b2e48b2f51d10f04bf8486dd9490e2'
+  'tools|branch#7e61a6523f790fcd9141186c68b11536ed91e0ab'
   'envoy|auto#proxy_workspace'
 )
 
