@@ -55,4 +55,4 @@ export PATH=${GOPATH}/bin:${PATH}
 
 go run main.go build --manifest <(echo "${MANIFEST}")
 go run main.go validate --release "${WORK_DIR}/out"
-#go run main.go publish --release "${WORK_DIR}/out" --dockerhub "${DOCKER_HUB}" --dockertags "${VERSION}"
+go run main.go publish --release "${WORK_DIR}/out" --dockerhub "${DOCKER_HUB}" --dockertags "${VERSION}"
