@@ -108,7 +108,7 @@ git status
 git add release/$BUILD_SCRIPT release/trigger-build release/setup.sh.bak release/$MANIFEST_FILE
 git config --global user.name "nsxsm-devops"
 git config --global user.email "nsxsm-devops@vmware.com"
-git commit -m "Push from nsxm-devops $CI_PROJECT_NAME $CI_COMMIT_SHORT_SHA"
+git commit -m "Push from nsxm-devops $CI_PROJECT_NAME $CI_COMMIT_SHORT_SHA" || true
 git push origin $BUILD_BRANCH
 
 # Finish
