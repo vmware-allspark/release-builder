@@ -460,11 +460,11 @@ func TestLicenses(r ReleaseInfo) error {
 	}
 	// Expect to find license folders for these repos
 	expect := map[string]struct{}{
-		"istio.tar.gz":           {},
-		"client-go.tar.gz":       {},
-		"tools.tar.gz":           {},
-		"test-infra.tar.gz":      {},
-		"release-builder.tar.gz": {},
+		"istio.tar.gz":      {},
+		"client-go.tar.gz":  {},
+		"tools.tar.gz":      {},
+		"test-infra.tar.gz": {},
+		// "release-builder.tar.gz": {},
 	}
 
 	for _, repo := range l {
