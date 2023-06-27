@@ -23,7 +23,15 @@ cd "${ROOT}"
 
 set -eux
 
-if [[ -n "${DOCKER_CONFIG:-}" ]]; then
+if [[ -n "${DOCKER_CONFIG_DATA:-}" ]]; then
+  # Custom docker config as inline environment variable
+  mkdir ~/.docker
+  set +x
+  echo "${DOCKER_CONFIG_DATA}" > ~/.docker/config.json
+  set -x
+  export DOCKER_CONFIG=~/.docker
+  gcloud auth configure-docker -q
+elif [[ -n "${DOCKER_CONFIG:-}" ]]; then
   # If DOCKER_CONFIG is set, we are mounting a known docker config.
   # we will want to merge in gcloud options, so we can push to GCR *and* the other (docker hub) credentials.
   # However, DOCKER_CONFIG is a read only mount. So we copy it to somewhere writeable then merge in the GCR creds
@@ -106,12 +114,7 @@ ${PROXY_OVERRIDE:-}
 EOF
 )
 
-if [ "$BUILD_BASE_IMAGES" = true ] ; then
-  # For build, don't use GITHUB_TOKEN_FILE env var set by preset-release-pipeline
-  # which is pointing to the github token for istio-release-robot. Instead point to
-  # the github token for istio-testing. The token is currently only used to create the
-  # PR to update the build image.
-  GITHUB_TOKEN_FILE=/etc/github-token/oauth
+if [[ "$BUILD_BASE_IMAGES" == "true" ]]; then
   MANIFEST=$(cat <<EOF
 version: "${VERSION}"
 docker: "${DOCKER_HUB}"
@@ -125,7 +128,7 @@ EOF
 )
   go run main.go build \
     --manifest <(echo "${MANIFEST}") \
-    --githubtoken "${GITHUB_TOKEN_FILE}" \
+    --githubtoken "${GITHUB_TOKEN_FILE:-}" \
     --build-base-images
   exit 0
 fi
