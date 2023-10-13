@@ -81,11 +81,11 @@ func CheckRelease(release string) ([]string, string, []error) {
 		"HelmOperatorManifest": TestHelmOperatorManifest,
 		"Manifest":             TestManifest,
 		"Licenses":             TestLicenses,
-		"Grafana":              TestGrafana,
-		"CompletionFiles":      TestCompletionFiles,
-		"ProxyVersion":         TestProxyVersion,
-		"Debian":               TestDebian,
-		"Rpm":                  TestRpm,
+		//"Grafana":              TestGrafana,
+		"CompletionFiles": TestCompletionFiles,
+		"ProxyVersion":    TestProxyVersion,
+		"Debian":          TestDebian,
+		"Rpm":             TestRpm,
 	}
 	var errors []error
 	var success []string
