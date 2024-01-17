@@ -1,0 +1,121 @@
+#!/bin/bash
+set -eux
+
+# Configuration
+
+BASE_BRANCH=release-1.20
+VERSION=1.20.0-release-v2
+
+# Set up repos as per https://github.com/istio/release-builder/blob/release-1.4/release/build.sh
+# and the hashes corresponding to tags in github.com/istio/<repo> for all repos.
+REPOS=(
+  'istio|branch#6869a6c2371e21c847d216065cf5c59863d01b4c'
+  'api|auto#modules'
+  'proxy|auto#deps'
+  'client-go|branch#30f00b62f7e940eaa08ea954c29d9df0175b447f'
+  'gogo-genproto|branch#f6930f836f1d2ecea2b3b53f280b992e26c0c555'
+  'test-infra|branch#fbf618a031c852115f583f0b419bf8bc865ace3b'
+  'tools|branch#409ec82b2eed812354fcf25dbf6f6218608df07e'
+  'envoy|auto#proxy_workspace'
+)
+
+# Build Script
+
+BUILD_BRANCH=build-$VERSION
+BUILD_DIR=`mktemp -d`
+MANIFEST_FILE="manifest.sh"
+BUILD_TAG=`echo $VERSION | awk '{split($0, array, "-"); print array[1]}'`
+
+pushd $BUILD_DIR
+
+echo "DEPENDENCIES=\$(cat <<EOD" >> $MANIFEST_FILE
+
+for ENTRY in "${REPOS[@]}" ; do
+  REPO="${ENTRY%%|*}"
+  META="${ENTRY##*|}"
+  TYPE="${META%%#*}"
+  REF="${META##*#}"
+
+  git clone git@github.com:vmware-allspark/$REPO.git
+  pushd $REPO
+  git remote add upstream https://github.com/istio/$REPO
+  git remote update
+  git fetch --tags --all
+  if [[ $TYPE == branch ]]; then
+    git checkout -b $BUILD_BRANCH $REF
+  elif [[ $REPO == "envoy" ]] 
+  then
+    git checkout -b $BUILD_BRANCH $BUILD_TAG
+  else
+    git checkout -b $BUILD_BRANCH upstream/$BASE_BRANCH
+  fi
+  git push origin $BUILD_BRANCH -f
+  popd
+
+  echo "  $REPO:" >> $MANIFEST_FILE
+  echo "    git: https://github.com/vmware-allspark/$REPO" >> $MANIFEST_FILE
+  if [[ $TYPE == branch ]]; then
+    echo "    branch: $BUILD_BRANCH" >> $MANIFEST_FILE
+  else
+    echo "    $TYPE: $REF" >> $MANIFEST_FILE
+  fi
+  if [[ $REPO == client-go ]]; then
+    echo "    goversionenabled: true" >> $MANIFEST_FILE
+  fi
+done
+
+echo "EOD" >> $MANIFEST_FILE
+echo ")" >> $MANIFEST_FILE
+
+popd
+
+# Copy generated manifest
+
+cp $BUILD_DIR/$MANIFEST_FILE .
+
+# Clean up
+
+rm -rf $BUILD_DIR
+
+# Switch to build branch and copy build files
+
+BUILD_SCRIPT="build_images.sh"
+REMOTE_NAME="istio"
+
+pushd release-builder
+git remote rm $REMOTE_NAME || true
+git remote add $REMOTE_NAME https://github.com/istio/release-builder.git
+git remote update
+
+git branch -D $BUILD_BRANCH || true
+git checkout -b $BUILD_BRANCH $REMOTE_NAME/$BASE_BRANCH -f
+git remote -v
+
+# Check if remote branch exits, if we are trying to rebuid of top existing branch in vmware-allspark/release-builder
+BRANCH=$(git ls-remote --heads origin $BUILD_BRANCH)
+if [ -z "$BRANCH" ]
+then
+    echo "$BUILD_BRANCH does not exist in vmware-allspark/release-builder."
+else
+    echo "$BUILD_BRANCH exists in vmware-allspark/release-builder, rebasing."
+    git pull --rebase origin $BUILD_BRANCH
+fi
+
+cd ..
+cat $MANIFEST_FILE
+cp $MANIFEST_FILE release-builder/release/
+cp release/$BUILD_SCRIPT release-builder/release/
+cp setup.sh release-builder/release/setup.sh.bak
+echo $VERSION > release-builder/release/trigger-build
+
+pushd release-builder
+git status
+git add release/$BUILD_SCRIPT release/trigger-build release/setup.sh.bak release/$MANIFEST_FILE
+git config --global user.name "nsxsm-devops"
+git config --global user.email "nsxsm-devops@vmware.com"
+git commit -m "Push from nsxm-devops $CI_PROJECT_NAME $CI_COMMIT_SHORT_SHA"
+git push origin $BUILD_BRANCH
+
+# Finish
+
+echo "Setup complete!"
