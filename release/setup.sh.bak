@@ -50,6 +50,7 @@ for ENTRY in "${REPOS[@]}" ; do
     git checkout -b $BUILD_BRANCH upstream/$BASE_BRANCH
   fi
   git push origin $BUILD_BRANCH -f
+  git push origin --tags
   popd
 
   echo "  $REPO:" >> $MANIFEST_FILE
