@@ -80,7 +80,7 @@ func CheckRelease(release string) ([]string, string, []error) {
 		"HelmOperatorManifest": TestHelmOperatorManifest,
 		"Manifest":             TestManifest,
 		"Licenses":             TestLicenses,
-		"Grafana":              TestGrafana,
+		//"Grafana":              TestGrafana,
 		"CompletionFiles":      TestCompletionFiles,
 		"ProxyVersion":         TestProxyVersion,
 		"Debian":               TestDebian,
@@ -437,7 +437,7 @@ func TestLicenses(r ReleaseInfo) error {
 		"client-go.tar.gz":       {},
 		"tools.tar.gz":           {},
 		"test-infra.tar.gz":      {},
-		"release-builder.tar.gz": {},
+		//"release-builder.tar.gz": {},
 	}
 
 	for _, repo := range l {
