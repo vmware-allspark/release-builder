@@ -21,7 +21,7 @@ import (
 
 	"istio.io/istio/pkg/log"
 	"istio.io/release-builder/pkg"
-	"istio.io/release-builder/pkg/util"
+	//"istio.io/release-builder/pkg/util"
 )
 
 var (
@@ -67,7 +67,7 @@ var (
 				return fmt.Errorf("failed to standardize manifest: %v", err)
 			}
 
-			if flags.buildBaseImages {
+			/*if flags.buildBaseImages {
 				token, err := util.GetGithubToken(flags.githubTokenFile)
 				if err != nil {
 					return err
@@ -76,7 +76,7 @@ var (
 					return fmt.Errorf("failed image scan: %v", err)
 				}
 				return nil
-			}
+			}*/
 
 			if err := Build(manifest); err != nil {
 				return fmt.Errorf("failed to build: %v", err)
