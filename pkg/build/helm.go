@@ -58,7 +58,7 @@ var (
 		"manifests/charts/istio-control/istio-discovery",
 		"manifests/charts/istio-operator",
 		"manifests/charts/istiod-remote",
-		"manifests/charts/ambient",
+		"manifests/sample-charts/ambient",
 	}
 
 	// repoHelmCharts contains all helm charts we will release to the helm repo. This is a subset of
@@ -69,7 +69,7 @@ var (
 		"manifests/charts/istio-cni",
 		"manifests/charts/ztunnel",
 		"manifests/charts/istio-control/istio-discovery",
-		"manifests/charts/ambient",
+		"manifests/charts/istiod-remote",
 	}
 )
 
